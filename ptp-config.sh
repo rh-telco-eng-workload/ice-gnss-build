@@ -26,10 +26,10 @@ echo "Disabled all SMA and U.FL Connections"
 # TX_PORT="SMA1"
 # RX_PORT="SMA1"
 
-NIC_WITH_GNSS="ens4f0"
-NIC_WITHOUT_GNSS="ens2f0"
-TX_PORT="SMA1"
-RX_PORT="SMA1"
+NIC_WITH_GNSS=""
+NIC_WITHOUT_GNSS=""
+TX_PORT=""
+RX_PORT=""
 
 if [ ! -z "${NIC_WITH_GNSS}" ]; then
     echo 2 1 > /sys/class/net/${NIC_WITH_GNSS}/device/ptp/ptp*/pins/${TX_PORT}
