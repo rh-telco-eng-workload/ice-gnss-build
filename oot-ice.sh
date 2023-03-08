@@ -159,9 +159,8 @@ MACHINE_OS=$(oc adm release info --image-for=machine-os-content quay.io/openshif
 if [ ${BUILD_RT} == "yes" ]; then
     KERNEL_VER=$(oc image info -o json ${MACHINE_OS}  | jq -r ".config.config.Labels[\"com.coreos.rpm.kernel-rt-core\"]")
 else
-    KERNEL_VER=$(oc image info -o json ${MACHINE_OS}  | jq -r ".config.config.Labels[\"com.coreos.rpm.kernel\"]")
+    KERNEL_VER=$(oc get nodes -o json | jq -r ".items[0].status.nodeInfo.kernelVersion")
 fi
-
 
 build_image
 
