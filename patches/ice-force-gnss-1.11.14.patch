@@ -1,6 +1,15 @@
 diff -ru ./src/ice_gnss.c ../ice-1.11.14_gnss/src/ice_gnss.c
 --- ./src/ice_gnss.c	2023-02-14 14:44:32.000000000 +0100
-+++ ../ice-1.11.14_gnss/src/ice_gnss.c	2023-03-06 17:33:10.362852214 +0100
++++ ../ice-1.11.14_gnss/src/ice_gnss.c	2023-03-08 15:38:30.203782680 +0100
+@@ -91,7 +91,7 @@
+ 	if (!test_bit(ICE_FLAG_GNSS, pf->flags))
+ 		return;
+ 
+-	if (!list_empty(&gnss->queue)) {
++	while (!list_empty(&gnss->queue)) {
+ 		struct gnss_write_buf *write_buf = NULL;
+ 		unsigned int bytes;
+ 
 @@ -184,15 +184,15 @@
  			goto exit_buf;
  	}
