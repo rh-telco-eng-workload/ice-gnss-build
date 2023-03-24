@@ -13,19 +13,19 @@ exit_on_error () {
 
 print_usage () {
 cat <<- END_OF_HELP
-    usage: $(basename $0) [-h] [-r] [-o] [-t] <ice_vers>
+    usage: $(basename $0) [-h] [-o] [-r] [-f <filename>] <ice_vers>
 
     The environment variable REGISTRY must be set.
     This is the registry that the driver container will be pushed to.
 
-    Build the Intel out of tree ice driver and GNSS module for Redhat OCP
+    Build the Intel out of tree ice driver for Redhat OCP
       -h: Print this help.
       -o: Use this specific OCP version.
           This option must be given if the KUBECONFIG env variable is not set
           or an OCP version other than the KUBECONFIG cluster version is desired.
       -r: Build the RT version of the OCP kernel.
-      -t: Specific tag of the Linux kernel source code to use for building the
-          GNSS driver as an external module. Default value is v5.19
+      -f: Specify a local path to the ice driver tarball, instead of downloading
+          it from a public location. The file must be present in this directory.
 END_OF_HELP
 }
 
@@ -36,12 +36,18 @@ build_image () {
   echo "Building for kernel:${KERNEL_VER} on OCP:${OCP_VER}"
   echo "DTKI for OCP:${OCP_VER} : ${DTK_IMAGE}"
 
-  podman build -f Dockerfile --no-cache . \
+  if [ -z $DRIVER_TARBALL ]; then
+    DOCKERFILE=Dockerfile
+  else
+    DOCKERFILE=Dockerfile.local
+  fi
+
+  podman build -f $DOCKERFILE --no-cache . \
     --build-arg IMAGE=${BASE_IMAGE} \
     --build-arg BUILD_IMAGE=${DTK_IMAGE} \
     --build-arg DRIVER_VER=${DRIVER_VER} \
+    --build-arg DRIVER_TARBALL=${DRIVER_TARBALL} \
     --build-arg KERNEL_VERSION=${KERNEL_VER} \
-    --build-arg GNSS_KERNEL_TAG=${GNSS_KERNEL_TAG} \
     -t ${REGISTRY}/${DRIVER_IMAGE}:${TAG}
   exit_on_error $?
 
@@ -115,7 +121,7 @@ END_OF_MACHINE_CONFIG
 KERNEL_VER=""
 BUILD_RT="no"
 OCP_VER=""
-GNSS_KERNEL_TAG="v5.19"
+DRIVER_TARBALL=""
 KUBECONFIG=${KUBECONFIG:-""}
 
 REGISTRY=${REGISTRY:-""}
@@ -124,11 +130,11 @@ if [ -z ${REGISTRY} ]; then
    exit 1
 fi
 
-while getopts hrc:k:o:t ARG ; do
+while getopts hro:f: ARG ; do
   case $ARG in
     o ) OCP_VER=$OPTARG ;;
     r ) BUILD_RT="yes" ;;
-    t ) GNSS_KERNEL_TAG=$OPTARG ;;
+    f ) DRIVER_TARBALL=$OPTARG ;;
     h ) print_usage ; exit 0 ;;
     ? ) print_usage ; exit 1 ;;
   esac

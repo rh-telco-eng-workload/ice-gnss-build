@@ -18,7 +18,7 @@ Scripts to build an out of tree Intel ICE driver with GNSS support on OCP 4.12.
 It builds the driver inside the Driver Toolkit image and pushes an image containing the kernel module to a registry.
 
 This is based on the work originally done on https://github.com/RHsyseng/oot-ice, with changes to enable GNSS support
-on ICE drivers starting from version 1.11.14.
+on ICE drivers starting from version 1.11.16.
 
 ### Prereq
 - Set `REGISTRY` in your env. This is the registry the driver container will be pushed to and that the OCP cluster will pull the driver container from.
@@ -53,7 +53,8 @@ To build against the real time kernel of the OCP version of the cluster in `KUBE
 ./oot-ice.sh -r <ice-driver-version>
 ```
 
-Patches from the patches/ directory are automatically applied, based on the ICE driver version.
+You can use the `-f filename.tar.gz` option to specify a local tarball to be used for the driver build, instead of
+downloading it from SourceForge. Note that the file must be present in the local directory.
 
 ### Deploy
 

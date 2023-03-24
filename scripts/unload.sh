@@ -3,7 +3,6 @@ set -eu
 
 # unload the out-of-tree drivers
 rmmod irdma || true
-rmmod gnss || true
 rmmod ice
 
 # load the in-tree driver
