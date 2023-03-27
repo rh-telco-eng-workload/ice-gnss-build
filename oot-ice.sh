@@ -161,11 +161,18 @@ fi
 DRIVER_IMAGE="ice-gnss-${DRIVER_VER}"
 
 # Building for an OCP kernel.
-MACHINE_OS=$(oc adm release info --image-for=machine-os-content quay.io/openshift-release-dev/ocp-release:${OCP_VER}-x86_64)
 if [ ${BUILD_RT} == "yes" ]; then
+    MACHINE_OS=$(oc adm release info --image-for=machine-os-content quay.io/openshift-release-dev/ocp-release:${OCP_VER}-x86_64)
     KERNEL_VER=$(oc image info -o json ${MACHINE_OS}  | jq -r ".config.config.Labels[\"com.coreos.rpm.kernel-rt-core\"]")
 else
-    KERNEL_VER=$(oc get nodes -o json | jq -r ".items[0].status.nodeInfo.kernelVersion")
+    # We need different command lines for pre-4.12 and 4.12.x
+    if [ $(echo -e "4.12.0\n${OCP_VER}" | sort -V | head -n 1 ) == "4.12.0" ]; then
+        MACHINE_OS=$(oc adm release info --image-for=rhel-coreos-8 quay.io/openshift-release-dev/ocp-release:${OCP_VER}-x86_64)
+        KERNEL_VER=$(oc image info -o json ${MACHINE_OS}  | jq -r ".config.config.Labels[\"ostree.linux\"]")
+    else
+        MACHINE_OS=$(oc adm release info --image-for=machine-os-content quay.io/openshift-release-dev/ocp-release:${OCP_VER}-x86_64)
+        KERNEL_VER=$(oc image info -o json ${MACHINE_OS}  | jq -r ".config.config.Labels[\"com.coreos.rpm.kernel\"]")
+    fi
 fi
 
 build_image
