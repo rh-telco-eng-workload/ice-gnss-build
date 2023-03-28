@@ -56,6 +56,12 @@ To build against the real time kernel of the OCP version of the cluster in `KUBE
 You can use the `-f filename.tar.gz` option to specify a local tarball to be used for the driver build, instead of
 downloading it from SourceForge. Note that the file must be present in the local directory.
 
+It is also possible to specify an OCP version to build the driver for:
+
+```
+./oot-ice.sh -o 4.12.5 -r -f ice-<version>.tar.gz <ice-driver-version>
+```
+
 ### Deploy
 
 Once the build finishes successfully, a `MachineConfig` to deploy the driver container to the cluster is generated.
