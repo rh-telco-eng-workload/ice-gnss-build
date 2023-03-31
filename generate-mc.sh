@@ -26,8 +26,13 @@ END_OF_HELP
 
 generate_machine_config () {
 
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   local service=$(base64 -w 0 service.sh)
   local ptp_config=$(base64 -w 0 ptp-config.sh)
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  local service=$(base64 -i service.sh)
+  local ptp_config=$(base64 -i ptp-config.sh)
+fi
 
 cat <<- END_OF_MACHINE_CONFIG > mc-oot-ice-gnss.yaml
 apiVersion: machineconfiguration.openshift.io/v1
