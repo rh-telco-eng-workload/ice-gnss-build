@@ -13,7 +13,7 @@ exit_on_error () {
 
 print_usage () {
 cat <<- END_OF_HELP
-    usage: $(basename $0) [-h] [-o] [-r] [-f <filename>] <ice_vers>
+    usage: $(basename $0) [-h] [-o <version>] [-r] [-f <filename>] <ice_vers>
 
     The environment variable REGISTRY must be set.
     This is the registry that the driver container will be pushed to.
@@ -155,7 +155,7 @@ DRIVER_VER=$1; shift
 # Try to get the OCP version from the cluster in KUBECONFIG
 if [ -z ${OCP_VER} ]; then
   if [ -z ${KUBECONFIG} ]; then
-    echo "Please specify -o or properly set your KUBECONFIG env variable"
+    echo "Please specify -o <version> or properly set your KUBECONFIG env variable"
     exit 1
   fi
   OCP_VER=$(oc get clusterversions/version -o json  | jq -r ".status.desired.version")
