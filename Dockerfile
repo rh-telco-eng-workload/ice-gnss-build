@@ -20,7 +20,8 @@ ARG KERNEL_VERSION
 
 RUN microdnf install -y kmod; microdnf clean all
 
-COPY --from=builder /build/ice-$DRIVER_VER/src/ice.ko /opt/lib/modules/${KERNEL_VERSION}/
+COPY --from=builder /build/ice-$DRIVER_VER/src/*.ko /opt/lib/modules/${KERNEL_VERSION}/
+COPY --from=builder /build/ice-$DRIVER_VER/ddp/ /ddp/
 COPY scripts/load.sh scripts/unload.sh /usr/local/bin
 
 RUN chmod +x /usr/local/bin/load.sh && chmod +x /usr/local/bin/unload.sh
