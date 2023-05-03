@@ -6,7 +6,7 @@ FROM ${BUILD_IMAGE} AS builder
 WORKDIR /build/
 ARG DRIVER_VER
 
-RUN curl https://netix.dl.sourceforge.net/project/e1000/ice%20stable/${DRIVER_VER}/ice-${DRIVER_VER}.tar.gz -o ice-${DRIVER_VER}.tar.gz
+RUN curl https://netix.dl.sourceforge.net/project/e1000/unsupported/ice%20unsupported/${DRIVER_VER}/ice-${DRIVER_VER}.tar.gz -o ice-${DRIVER_VER}.tar.gz
 RUN tar xvfz ice-${DRIVER_VER}.tar.gz
 
 WORKDIR /build/ice-${DRIVER_VER}/src
