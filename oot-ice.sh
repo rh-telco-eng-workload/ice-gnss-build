@@ -132,6 +132,19 @@ KUBECONFIG=${KUBECONFIG:-""}
 REGISTRY=${REGISTRY:-""}
 if [ -z ${REGISTRY} ]; then
    echo "The environment variable REGISTRY must be set."
+   echo "This variable will be used to push the image to the registry"
+   exit 1
+fi
+
+if [ -z ${REGISTRY_AUTH_FILE} ]; then
+   echo "WARNING: The environment variable REGISTRY_AUTH_FILE is not set."
+   echo "You may have trouble downloading the OpenShift container images used for the build."
+   echo "You can download it from https://console.redhat.com/openshift/install/platform-agnostic"
+fi
+
+OCBIN=$(which oc 2>/dev/null)
+if [ -z ${OCBIN} ]; then
+   echo "You need to have the oc binary in the PATH to launch this script"
    exit 1
 fi
 
