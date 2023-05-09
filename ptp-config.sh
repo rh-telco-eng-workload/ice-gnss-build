@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -e
 
 ETH=$(grep -e 000e -e 000f /sys/class/net/*/device/subsystem_device | awk -F"/" '{print $5}')
 
