@@ -43,3 +43,9 @@ fi
 if [ ! -z "${NIC_WITHOUT_GNSS}" ]; then
     echo 1 1 > /sys/class/net/${NIC_WITHOUT_GNSS}/device/ptp/ptp*/pins/${RX_PORT}
 fi
+
+# Give some time after the driver has initialized all cards before reloading NetworkManager
+sleep 60
+nmcli connection reload
+sleep 20
+nmcli networking on
