@@ -63,12 +63,11 @@ spec:
           [Unit]
           Description=out-of-tree driver loader
           # Start after the network is up
-          Wants=network-online.target
-          After=network-online.target
+          After=NetworkManager-wait-online.service openvswitch.service network.service nodeip-configuration.service
           # Also after docker.service (no effect on systems without docker)
           After=docker.service
           # Before kubelet.service (no effect on systems without kubernetes)
-          Before=kubelet.service
+          Before=kubelet.service ovs-configuration.service
 
           [Service]
           Type=oneshot

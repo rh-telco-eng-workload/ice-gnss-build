@@ -43,3 +43,27 @@ fi
 if [ ! -z "${NIC_WITHOUT_GNSS}" ]; then
     echo 1 1 > /sys/class/net/${NIC_WITHOUT_GNSS}/device/ptp/ptp*/pins/${RX_PORT}
 fi
+
+# If you have a VLAN interface created via NMState or nmcli, and that interface
+# is OVN's main interface, the configure-ovs.sh script may not find the main IP
+# unless we manually start the interface after loading the out-of-tree driver
+# Set the ICE_VLAN_INTERFACES environment variable with the VLAN interfaces you
+# have defined (separated by blanks), so the script can ensure all of them are
+# enabled
+
+# Example values
+# ICE_VLAN_INTERFACES=""
+# ICE_VLAN_INTERFACES="ens1f1.100"
+# ICE_VLAN_INTERFACES="ens1f1.100 ens1f1.200"
+
+ICE_VLAN_INTERFACES=""
+
+if [ ! -z "${ICE_VLAN_INTERFACES}" ]; then
+    # Give some time after the driver has initialized all cards before reloading NetworkManager
+    sleep 60
+    nmcli connection reload
+    for INTERFACE in ${ICE_VLAN_INTERFACES}; do
+        echo "Re-enabling VLAN interface $INTERFACE"
+        nmcli conn up $INTERFACE
+    done
+fi
