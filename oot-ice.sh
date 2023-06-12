@@ -136,6 +136,7 @@ if [ -z ${REGISTRY} ]; then
    exit 1
 fi
 
+REGISTRY_AUTH_FILE=${REGISTRY_AUTH_FILE:-""}
 if [ -z ${REGISTRY_AUTH_FILE} ]; then
    echo "WARNING: The environment variable REGISTRY_AUTH_FILE is not set."
    echo "You may have trouble downloading the OpenShift container images used for the build."
