@@ -38,10 +38,14 @@ TX_PORT=""
 RX_PORT=""
 
 if [ ! -z "${NIC_WITH_GNSS}" ]; then
-    echo 2 1 > /sys/class/net/${NIC_WITH_GNSS}/device/ptp/ptp*/pins/${TX_PORT}
+    # Using the last character from the TX_PORT string allows us to have a single line for
+    # both SMA1 and SMA2
+    echo "2 ${TX_PORT: -1}" > /sys/class/net/${NIC_WITH_GNSS}/device/ptp/ptp*/pins/${TX_PORT}
 fi
 if [ ! -z "${NIC_WITHOUT_GNSS}" ]; then
-    echo 1 1 > /sys/class/net/${NIC_WITHOUT_GNSS}/device/ptp/ptp*/pins/${RX_PORT}
+    # Using the last character from the RX_PORT string allows us to have a single line for
+    # both SMA1 and SMA2
+    echo "1 ${RX_PORT: -1}" > /sys/class/net/${NIC_WITHOUT_GNSS}/device/ptp/ptp*/pins/${RX_PORT}
 fi
 
 # If you have a VLAN interface created via NMState or nmcli, and that interface
