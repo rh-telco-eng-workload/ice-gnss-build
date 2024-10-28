@@ -1,18 +1,21 @@
 #!/bin/bash
 set -e
 
-ETH=$(grep -e 000e -e 000f /sys/class/net/*/device/subsystem_device | awk -F"/" '{print $5}')
+# In driver 1.14.9.2_vlan_hotfix, these writes fail often. Disabling it but keeping the writes for the
+# selected SMA ports work fine, so disabling the initial cleanup for now
 
-for DEV in $ETH; do
-  if [ -f /sys/class/net/$DEV/device/ptp/ptp*/pins/U.FL2 ]; then
-    echo 0 2 > /sys/class/net/$DEV/device/ptp/ptp*/pins/U.FL2
-    echo 0 1 > /sys/class/net/$DEV/device/ptp/ptp*/pins/U.FL1
-    echo 0 2 > /sys/class/net/$DEV/device/ptp/ptp*/pins/SMA2
-    echo 0 1 > /sys/class/net/$DEV/device/ptp/ptp*/pins/SMA1
-  fi
-done
-
-echo "Disabled all SMA and U.FL Connections"
+#ETH=$(grep -e 000e -e 000f /sys/class/net/*/device/subsystem_device | awk -F"/" '{print $5}')
+#
+#for DEV in $ETH; do
+#  if [ -f /sys/class/net/$DEV/device/ptp/ptp*/pins/U.FL2 ]; then
+#    echo 0 2 > /sys/class/net/$DEV/device/ptp/ptp*/pins/U.FL2
+#    echo 0 1 > /sys/class/net/$DEV/device/ptp/ptp*/pins/U.FL1
+#    echo 0 2 > /sys/class/net/$DEV/device/ptp/ptp*/pins/SMA2
+#    echo 0 1 > /sys/class/net/$DEV/device/ptp/ptp*/pins/SMA1
+#  fi
+#done
+#
+#echo "Disabled all SMA and U.FL Connections"
 
 sleep 3
 
